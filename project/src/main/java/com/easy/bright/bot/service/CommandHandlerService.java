@@ -14,4 +14,8 @@ public class CommandHandlerService {
     public String handleStartCommand(){
         return "Hello!";
     }
+
+    public String getUnrecognizedCommandResponse(){
+        return "Sorry command unrecognized!";
+    }
 }

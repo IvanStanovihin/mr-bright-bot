@@ -25,7 +25,7 @@ public class BotLogic extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (!update.hasMessage() || !update.getMessage().hasText()){
-
+            sendResponse(update.getMessage().getChatId(), commandHandlerService.getUnrecognizedCommandResponse());
         }
 
         String messageText = update.getMessage().getText();
@@ -37,6 +37,7 @@ public class BotLogic extends TelegramLongPollingBot {
             case "/help":
                 break;
             default:
+                sendResponse(update.getMessage().getChatId(), commandHandlerService.getUnrecognizedCommandResponse());
 
         }
     }
