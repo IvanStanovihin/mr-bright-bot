@@ -19,9 +19,9 @@ public class TestResult {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private BotUser user;
-    private String question1Result;
-    private String question2Result;
-    private String question3Result;
-    private String question4Result;
-    private String question5Result;
+    private String answer1;
+    private String answer2;
+    private String answer3;
+    private String answer4;
+    private String answer5;
 }
