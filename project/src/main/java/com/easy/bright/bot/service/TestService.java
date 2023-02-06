@@ -52,5 +52,108 @@ public class TestService {
         return message;
     }
 
+    public SendMessage getQuestion2Message(){
+        SendMessage message = new SendMessage();
+        message.setText("Вопрос № 2");
+        InlineKeyboardMarkup markupInLine = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>>rowsInLine = new ArrayList<>();
+        List<InlineKeyboardButton>rowWithButtons1 = new ArrayList<>();
+        List<InlineKeyboardButton>rowWithButtons2 = new ArrayList<>();
 
+        InlineKeyboardButton button1 = new InlineKeyboardButton();
+        button1.setText("Вариант ответа 1");
+        button1.setCallbackData(BotConstants.QUESTION_2_ANSWER_1_ID);
+
+        InlineKeyboardButton button2 = new InlineKeyboardButton();
+        button2.setText("Вариант ответа 2");
+        button2.setCallbackData(BotConstants.QUESTION_2_ANSWER_2_ID);
+
+        InlineKeyboardButton button3 = new InlineKeyboardButton();
+        button3.setText("Вариант ответа 3");
+        button3.setCallbackData(BotConstants.QUESTION_2_ANSWER_3_ID);
+
+        InlineKeyboardButton button4 = new InlineKeyboardButton();
+        button4.setText("Вариант ответа 4");
+        button4.setCallbackData(BotConstants.QUESTION_2_ANSWER_4_ID);
+
+        rowWithButtons1.add(button1);
+        rowWithButtons1.add(button2);
+        rowWithButtons2.add(button3);
+        rowWithButtons2.add(button4);
+        rowsInLine.add(rowWithButtons1);
+        rowsInLine.add(rowWithButtons2);
+        markupInLine.setKeyboard(rowsInLine);
+        message.setReplyMarkup(markupInLine);
+        return message;
+    }
+
+    public SendMessage getQuestion3Message(){
+        SendMessage message = new SendMessage();
+        message.setText("Вопрос № 3");
+        InlineKeyboardMarkup markupInLine = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>>rowsInLine = new ArrayList<>();
+        List<InlineKeyboardButton>rowWithButtons1 = new ArrayList<>();
+        List<InlineKeyboardButton>rowWithButtons2 = new ArrayList<>();
+
+        InlineKeyboardButton button1 = new InlineKeyboardButton();
+        button1.setText("Вариант ответа 1");
+        button1.setCallbackData(BotConstants.QUESTION_3_ANSWER_1_ID);
+
+        InlineKeyboardButton button2 = new InlineKeyboardButton();
+        button2.setText("Вариант ответа 2");
+        button2.setCallbackData(BotConstants.QUESTION_3_ANSWER_2_ID);
+
+        InlineKeyboardButton button3 = new InlineKeyboardButton();
+        button3.setText("Вариант ответа 3");
+        button3.setCallbackData(BotConstants.QUESTION_3_ANSWER_3_ID);
+
+        InlineKeyboardButton button4 = new InlineKeyboardButton();
+        button4.setText("Вариант ответа 4");
+        button4.setCallbackData(BotConstants.QUESTION_3_ANSWER_4_ID);
+
+        rowWithButtons1.add(button1);
+        rowWithButtons1.add(button2);
+        rowWithButtons2.add(button3);
+        rowWithButtons2.add(button4);
+        rowsInLine.add(rowWithButtons1);
+        rowsInLine.add(rowWithButtons2);
+        markupInLine.setKeyboard(rowsInLine);
+        message.setReplyMarkup(markupInLine);
+        return message;
+    }
+
+    public SendMessage getQuestion4Message(){
+        SendMessage message = new SendMessage();
+        message.setText("Вопрос № 4");
+        InlineKeyboardMarkup markupInLine = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>>rowsInLine = new ArrayList<>();
+        List<InlineKeyboardButton>rowWithButtons1 = new ArrayList<>();
+        List<InlineKeyboardButton>rowWithButtons2 = new ArrayList<>();
+
+        InlineKeyboardButton button1 = new InlineKeyboardButton();
+        button1.setText("Вариант ответа 1");
+        button1.setCallbackData(BotConstants.QUESTION_4_ANSWER_1_ID);
+
+        InlineKeyboardButton button2 = new InlineKeyboardButton();
+        button2.setText("Вариант ответа 2");
+        button2.setCallbackData(BotConstants.QUESTION_4_ANSWER_2_ID);
+
+        InlineKeyboardButton button3 = new InlineKeyboardButton();
+        button3.setText("Вариант ответа 3");
+        button3.setCallbackData(BotConstants.QUESTION_4_ANSWER_3_ID);
+
+        InlineKeyboardButton button4 = new InlineKeyboardButton();
+        button4.setText("Вариант ответа 4");
+        button4.setCallbackData(BotConstants.QUESTION_4_ANSWER_4_ID);
+
+        rowWithButtons1.add(button1);
+        rowWithButtons1.add(button2);
+        rowWithButtons2.add(button3);
+        rowWithButtons2.add(button4);
+        rowsInLine.add(rowWithButtons1);
+        rowsInLine.add(rowWithButtons2);
+        markupInLine.setKeyboard(rowsInLine);
+        message.setReplyMarkup(markupInLine);
+        return message;
+    }
 }

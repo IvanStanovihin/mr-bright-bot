@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -19,7 +21,7 @@ public class BotLogic extends TelegramLongPollingBot {
     private TestService testService;
     private CommandHandlerService commandHandlerService;
 
-    public BotLogic(AppConfig appConfig, CommandHandlerService commandHandlerService, TestService testService){
+    public BotLogic(AppConfig appConfig, CommandHandlerService commandHandlerService, TestService testService) {
         this.appConfig = appConfig;
         this.commandHandlerService = commandHandlerService;
         this.testService = testService;
@@ -29,26 +31,42 @@ public class BotLogic extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        if(update.hasCallbackQuery()){
+        if (update.hasCallbackQuery()) {
             String callBackData = update.getCallbackQuery().getData();
-            switch(callBackData) {
+            switch (callBackData) {
                 case BotConstants.QUESTION_1_ANSWER_1_ID:
-                    sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Вы выбрали 1 вариант ответа!");
-                    break;
                 case BotConstants.QUESTION_1_ANSWER_2_ID:
-                    sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Вы выбрали 2 вариант ответа!");
-                    break;
                 case BotConstants.QUESTION_1_ANSWER_3_ID:
-                    sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Вы выбрали 3 вариант ответа!");
-                    break;
                 case BotConstants.QUESTION_1_ANSWER_4_ID:
-                    sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Вы выбрали 4 вариант ответа!");
+                    deleteMessage(update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getMessage().getMessageId());
+                    sendMessage(update.getCallbackQuery().getMessage().getChatId(), testService.getQuestion2Message());
+                    break;
+                case BotConstants.QUESTION_2_ANSWER_1_ID:
+                case BotConstants.QUESTION_2_ANSWER_2_ID:
+                case BotConstants.QUESTION_2_ANSWER_3_ID:
+                case BotConstants.QUESTION_2_ANSWER_4_ID:
+                    deleteMessage(update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getMessage().getMessageId());
+                    sendMessage(update.getCallbackQuery().getMessage().getChatId(), testService.getQuestion3Message());
+                    break;
+                case BotConstants.QUESTION_3_ANSWER_1_ID:
+                case BotConstants.QUESTION_3_ANSWER_2_ID:
+                case BotConstants.QUESTION_3_ANSWER_3_ID:
+                case BotConstants.QUESTION_3_ANSWER_4_ID:
+                    deleteMessage(update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getMessage().getMessageId());
+                    sendMessage(update.getCallbackQuery().getMessage().getChatId(), testService.getQuestion4Message());
+                    break;
+                case BotConstants.QUESTION_4_ANSWER_1_ID:
+                case BotConstants.QUESTION_4_ANSWER_2_ID:
+                case BotConstants.QUESTION_4_ANSWER_3_ID:
+                case BotConstants.QUESTION_4_ANSWER_4_ID:
+                    deleteMessage(update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getMessage().getMessageId());
+                    sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Поздравляю, вы завершили тестирование!!!");
                     break;
                 default:
                     sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Извините, кнопка не распознана!");
                     break;
             }
-        }else {
+        } else {
             String messageText = update.getMessage().getText();
             switch (messageText) {
                 case "/start":
@@ -68,22 +86,42 @@ public class BotLogic extends TelegramLongPollingBot {
         }
     }
 
-    private void sendMessage(long chatId, SendMessage message){
-        try{
+    private void sendMessage(long chatId, SendMessage message) {
+        try {
             message.setChatId(String.valueOf(chatId));
             execute(message);
-        }catch(TelegramApiException ex){
+        } catch (TelegramApiException ex) {
             log.error("Error occurred while sending message for user. ChatId = " + chatId + " Exception: " + ex);
         }
     }
 
-    private void sendTextResponse(long chatId, String text){
+    private void deleteMessage(long chatId, long messageId) {
+        DeleteMessage messageForDelete = new DeleteMessage();
+        messageForDelete.setChatId(String.valueOf(chatId));
+        messageForDelete.setMessageId((int) messageId);
+        try {
+            execute(messageForDelete);
+        } catch (TelegramApiException ex) {
+            log.error("Error occurred in method deleteMessage. ChatId = " + chatId + " MessageId = " + messageId + " Exception: " + ex);
+        }
+    }
+
+    private void sendEditMessage(long chatId, EditMessageText message) {
+        try {
+            message.setChatId(String.valueOf(chatId));
+            execute(message);
+        } catch (TelegramApiException ex) {
+            log.error("Error occurred while sending message for user. ChatId = " + chatId + " Exception: " + ex);
+        }
+    }
+
+    private void sendTextResponse(long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(text);
-        try{
+        try {
             execute(message);
-        }catch(TelegramApiException ex){
+        } catch (TelegramApiException ex) {
             log.error("Error occurred while sending message for user. ChatId: " + chatId + ".\n Exception: " + ex);
         }
     }

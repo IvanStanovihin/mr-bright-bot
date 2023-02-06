@@ -2,6 +2,7 @@ package com.easy.bright.bot.service;
 
 import lombok.Data;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Locale;
 
@@ -18,24 +19,20 @@ public class AnswersService {
     private final String ANSWER_4 = "Mr-Bright";
     private final String ANSWER_5 = "Тюльпаны";
 
-    public boolean isQuestion1Correct(String answerQuestion1){
-        return isAnswerCorrect(answerQuestion1, ANSWER_1);
+   public void processQuestion1(Update update, String userAnswer){
+
+   }
+
+    public void processQuestion2(Update update, String userAnswer){
+
     }
 
-    public boolean isQuestion2Correct(String answerQuestion2){
-        return isAnswerCorrect(answerQuestion2, ANSWER_2);
+    public void processQuestion3(Update update, String userAnswer){
+
     }
 
-    public boolean isQuestion3Correct(String answerQuestion3){
-        return isAnswerCorrect(answerQuestion3, ANSWER_3);
-    }
+    public void processQuestion4(Update update, String userAnswer){
 
-    public boolean isQuestion4Correct(String answerQuestion4){
-        return isAnswerCorrect(answerQuestion4, ANSWER_4);
-    }
-
-    public boolean isQuestion5Correct(String answerQuestion5){
-        return isAnswerCorrect(answerQuestion5, ANSWER_5);
     }
 
     private boolean isAnswerCorrect(String userAnswer, String correctAnswer){
