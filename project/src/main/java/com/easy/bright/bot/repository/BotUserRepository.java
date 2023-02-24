@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BotUserRepository extends CrudRepository<BotUser, Long> {
+
+    public BotUser findByChatId(Long chatId);
 }

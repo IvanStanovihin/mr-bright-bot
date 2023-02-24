@@ -2,6 +2,8 @@ package com.easy.bright.bot.telegram;
 
 import com.easy.bright.bot.configuration.AppConfig;
 import com.easy.bright.bot.service.CommandHandlerService;
+import com.easy.bright.bot.service.MessageService;
+import com.easy.bright.bot.service.SendMessageService;
 import com.easy.bright.bot.service.TestService;
 import com.easy.bright.bot.utils.BotConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +22,16 @@ public class BotLogic extends TelegramLongPollingBot {
     private AppConfig appConfig;
     private TestService testService;
     private CommandHandlerService commandHandlerService;
+    private SendMessageService sendMessageService;
+    private MessageService messageService;
 
-    public BotLogic(AppConfig appConfig, CommandHandlerService commandHandlerService, TestService testService) {
+    public BotLogic(AppConfig appConfig, CommandHandlerService commandHandlerService,
+                    TestService testService, SendMessageService sendMessageService, MessageService messageService) {
         this.appConfig = appConfig;
         this.commandHandlerService = commandHandlerService;
         this.testService = testService;
+        this.sendMessageService = sendMessageService;
+        this.messageService = messageService;
     }
 
 
@@ -66,12 +73,11 @@ public class BotLogic extends TelegramLongPollingBot {
                     sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Извините, кнопка не распознана!");
                     break;
             }
-        } else {
+        } else if (update.hasMessage() && update.getMessage().hasText()){
             String messageText = update.getMessage().getText();
             switch (messageText) {
                 case "/start":
-                    String startCommandResponse = commandHandlerService.handleStartCommand();
-                    sendTextResponse(update.getMessage().getChatId(), startCommandResponse);
+                    sendMessage(update.getMessage().getChatId(), messageService.handleStartCommand(update));
                     break;
                 case "/help":
                     sendTextResponse(update.getMessage().getChatId(), "Вы запросили справку по командам бота");
