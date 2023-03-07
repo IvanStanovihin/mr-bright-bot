@@ -25,7 +25,10 @@ public class BotUser {
     private String lastName;
     private String telegramName;
     private Timestamp registeredAt;
+    private String phoneNumber;
+    private String inputName;
+    private String schoolClass;
+    private String schoolName;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<TestResult> testResult;
-
 }
