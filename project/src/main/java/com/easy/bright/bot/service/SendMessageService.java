@@ -1,7 +1,7 @@
 package com.easy.bright.bot.service;
 
 import com.easy.bright.bot.utils.BotConstants;
-import com.easy.bright.bot.utils.BotState;
+import com.easy.bright.bot.utils.BotStateService;
 import com.easy.bright.bot.utils.BotStateEnum;
 import com.easy.bright.bot.utils.UserConstants;
 import lombok.Data;
@@ -54,8 +54,25 @@ public class SendMessageService {
     public SendMessage getSchoolInfoMessage(){
         SendMessage startMessage = new SendMessage();
         startMessage.setText("Введи название школы, в которой ты учишься");
-        BotState.botState = BotStateEnum.INPUT_SCHOOL;
         return startMessage;
+    }
+
+    public SendMessage getStartSessionInfo(){
+        SendMessage startSessionMessage = new SendMessage();
+        startSessionMessage.setText("\\nДля того чтобы начать тестирование нажмите кнопку start" +
+                "\nПомните, что тестирование можно пройти только один раз!\" +\n" +
+                "\nЖелаю удачи ;)");
+        InlineKeyboardMarkup startSessionMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>>buttonLines = new ArrayList<>();
+        List<InlineKeyboardButton>buttonInLine = new ArrayList<>();
+        InlineKeyboardButton startSessionButton = new InlineKeyboardButton();
+        startSessionButton.setText("Начать тестирование)");
+        startSessionButton.setCallbackData(BotConstants.START_SESSION_BUTTON);
+        buttonInLine.add(startSessionButton);
+        buttonLines.add(buttonInLine);
+        startSessionMarkup.setKeyboard(buttonLines);
+        startSessionMessage.setReplyMarkup(startSessionMarkup);
+        return startSessionMessage;
     }
 
     public SendMessage getNameInfoMessage(){
@@ -74,9 +91,8 @@ public class SendMessageService {
     public SendMessage getStartMessage(){
         SendMessage startMessage = new SendMessage();
         startMessage.setText("Добро пожаловать в Mr Bright Bot :)" +
-                "\nДля того чтобы начать тестирование нажмите кнопку start" +
-                "\nПомните, что тестирование можно пройти только один раз!" +
-                "\nЖелаю удачи ;)");
+                "\nДля того чтобы сохранить твой результат, я должен получше тебя узнать" +
+                "\nЧтобы познакомиться нажимай кнопку РЕГИСТРАЦИЯ 8)");
         InlineKeyboardMarkup startMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>>buttonLines = new ArrayList<>();
         List<InlineKeyboardButton> buttonsInLine = new ArrayList<>();

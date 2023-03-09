@@ -1,16 +1,12 @@
 package com.easy.bright.bot.service;
 
-import com.easy.bright.bot.model.BotUser;
 import com.easy.bright.bot.repository.BotUserRepository;
-import com.easy.bright.bot.utils.BotState;
+import com.easy.bright.bot.utils.BotStateService;
 import com.easy.bright.bot.utils.BotStateEnum;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.sql.Timestamp;
-import java.util.Date;
 
 @Service
 @Data
@@ -19,22 +15,29 @@ public class MessageService {
     private BotUserRepository botUserRepository;
     private BotUserService botUserService;
     private SendMessageService sendMessageService;
+    private BotStateService botStateService;
 
     public MessageService(BotUserRepository botUserRepository, SendMessageService sendMessageService,
-                          BotUserService botUserService){
+                          BotUserService botUserService, BotStateService botStateService){
         this.botUserRepository = botUserRepository;
         this.sendMessageService = sendMessageService;
         this.botUserService = botUserService;
+        this.botStateService = botStateService;
     }
 
     public SendMessage getClassInfoMessage(){
         return sendMessageService.getClassInfoMessage();
     }
 
-    public SendMessage getNameInfoMessage(){
-        BotState.botState = BotStateEnum.INPUT_NAME;
+    public SendMessage getNameInfoMessage(long chatId){
+        botStateService.changeState(chatId, BotStateEnum.INPUT_NAME);
         return sendMessageService.getNameInfoMessage();
     }
+
+    public SendMessage getStartSessionInfo(){
+        return sendMessageService.getStartSessionInfo();
+    }
+
 
     public SendMessage handleStartCommand(Update update){
         SendMessage startMessage = new SendMessage();
@@ -58,7 +61,7 @@ public class MessageService {
      */
     public SendMessage processEnteredName(Update update){
         botUserService.addInputName(update);
-        BotState.botState = BotStateEnum.INPUT_SCHOOL;
+        botStateService.changeState(update.getMessage().getChatId(), BotStateEnum.INPUT_SCHOOL);
         return sendMessageService.getSchoolInfoMessage();
     }
 
@@ -68,7 +71,7 @@ public class MessageService {
      */
     public SendMessage processEnteredSchool(Update update){
         botUserService.addSchool(update);
-        BotState.botState = BotStateEnum.INPUT_CLASS;
+        botStateService.changeState(update.getMessage().getChatId(), BotStateEnum.INPUT_CLASS);
         return sendMessageService.getClassInfoMessage();
     }
 
@@ -79,7 +82,7 @@ public class MessageService {
      */
     public SendMessage processEnteredClass(Long chatId, String userClass){
         botUserService.addClass(chatId, userClass);
-        BotState.botState = BotStateEnum.INPUT_PHONE_NUMBER;
+        botStateService.changeState(chatId, BotStateEnum.INPUT_PHONE_NUMBER);
         return sendMessageService.getPhoneInfoMessage();
     }
 
@@ -89,6 +92,7 @@ public class MessageService {
      */
     public SendMessage processEnteredPhone(Update update){
         botUserService.addPhone(update);
-        return sendMessageService.getCompleteRegistrationMessage();
+        botStateService.changeState(update.getMessage().getChatId(), BotStateEnum.START_TEST_SESSION);
+        return sendMessageService.getStartSessionInfo();
     }
 }

@@ -9,7 +9,8 @@ public enum BotStateEnum {
     INPUT_NAME(1),
     INPUT_SCHOOL(2),
     INPUT_CLASS(3),
-    INPUT_PHONE_NUMBER(4);
+    INPUT_PHONE_NUMBER(4),
+    START_TEST_SESSION(5);
 
 
     private int stateNumber;

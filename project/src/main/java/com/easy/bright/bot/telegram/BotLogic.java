@@ -5,7 +5,7 @@ import com.easy.bright.bot.service.MessageService;
 import com.easy.bright.bot.service.SendMessageService;
 import com.easy.bright.bot.service.TestService;
 import com.easy.bright.bot.utils.BotConstants;
-import com.easy.bright.bot.utils.BotState;
+import com.easy.bright.bot.utils.BotStateService;
 import com.easy.bright.bot.utils.BotStateEnum;
 import com.easy.bright.bot.utils.UserConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.annotation.PostConstruct;
+
 @Slf4j
 @Component
 public class BotLogic extends TelegramLongPollingBot {
@@ -25,14 +27,26 @@ public class BotLogic extends TelegramLongPollingBot {
     private TestService testService;
     private SendMessageService sendMessageService;
     private MessageService messageService;
+    private TestSessionManager testSessionManager;
+    private BotStateService botStateService;
 
     public BotLogic(AppConfig appConfig, TestService testService,
-                    SendMessageService sendMessageService, MessageService messageService) {
+                    SendMessageService sendMessageService, MessageService messageService,
+                    BotStateService botStateService) {
         this.appConfig = appConfig;
         this.testService = testService;
         this.sendMessageService = sendMessageService;
         this.messageService = messageService;
+        this.botStateService = botStateService;
     }
+
+    @PostConstruct
+    private void startResources(){
+        this.testSessionManager = new TestSessionManager();
+        testSessionManager.start();
+    }
+
+
 
 
     @Override
@@ -43,7 +57,7 @@ public class BotLogic extends TelegramLongPollingBot {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
             switch (callBackData) {
                 case BotConstants.START_BUTTON:
-                    sendMessage(chatId, messageService.getNameInfoMessage());
+                    sendMessage(chatId, messageService.getNameInfoMessage(chatId));
                     break;
                 case BotConstants.CLASS_7_8_BUTTON:
                     sendMessage(chatId, messageService.processEnteredClass(chatId, UserConstants.CLASS_7_8));
@@ -58,35 +72,35 @@ public class BotLogic extends TelegramLongPollingBot {
                     sendTextResponse(update.getCallbackQuery().getMessage().getChatId(), "Извините, кнопка не распознана!");
                     break;
             }
-        } else if (update.hasMessage() && update.getMessage().hasText() && BotState.botState == BotStateEnum.DEFAULT) {
+        } else if (update.hasMessage() && update.getMessage().hasText() && botStateService.getBotState(update.getMessage().getChatId()) == null) {
             String messageText = update.getMessage().getText();
+            long chatId = update.getMessage().getChatId();
             switch (messageText) {
                 case "/start":
-                    sendMessage(update.getMessage().getChatId(), messageService.handleStartCommand(update));
+                    sendMessage(chatId, messageService.handleStartCommand(update));
                     break;
                 case "/help":
-                    sendTextResponse(update.getMessage().getChatId(), "Вы запросили справку по командам бота");
+                    sendTextResponse(chatId, "Вы запросили справку по командам бота");
                     break;
                 case "/question1":
-                    sendMessage(update.getMessage().getChatId(), testService.getQuestion1Message());
+                    sendMessage(chatId, testService.getQuestion1Message());
                     break;
                 default:
-                    sendTextResponse(update.getMessage().getChatId(), "Извини, твоя команда не распознана!");
+                    sendTextResponse(chatId, "Извини, твоя команда не распознана!");
 
             }
         } else {
-            switch (BotState.botState) {
+            long chatId = update.getMessage().getChatId();
+            switch (botStateService.getBotState(chatId)) {
                 case INPUT_NAME:
-                    sendMessage(update.getMessage().getChatId(), messageService.processEnteredName(update));
+                    sendMessage(chatId, messageService.processEnteredName(update));
                     break;
                 case INPUT_SCHOOL:
-                    sendMessage(update.getMessage().getChatId(), messageService.processEnteredSchool(update));
+                    sendMessage(chatId, messageService.processEnteredSchool(update));
                     break;
                 case INPUT_PHONE_NUMBER:
-                    sendMessage(update.getMessage().getChatId(), messageService.processEnteredPhone(update));
+                    sendMessage(chatId, messageService.processEnteredPhone(update));
                     break;
-
-
             }
         }
     }

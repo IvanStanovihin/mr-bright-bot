@@ -3,9 +3,11 @@ package com.easy.bright.bot.utils;
 public class BotConstants {
 
     public static final String START_BUTTON = "START_BUTTON";
-    private static final String NAME_INFO_BUTTON = "NAME_INFO_BUTTON";
-    private static final String SCHOOL_INFO_BUTTON = "SCHOOL_INFO_BUTTON";
-    private static final String CLASS_INFO_BUTTON = "CLASS_INFO_BUTTON";
+    public static final String START_SESSION_BUTTON = "START_SESSION_BUTTON";
+
+    public static final String NAME_INFO_BUTTON = "NAME_INFO_BUTTON";
+    public static final String SCHOOL_INFO_BUTTON = "SCHOOL_INFO_BUTTON";
+    public static final String CLASS_INFO_BUTTON = "CLASS_INFO_BUTTON";
 
 
     /**
